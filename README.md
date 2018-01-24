@@ -1,2 +1,2 @@
 # python_bottle_samples
-pythonのbottle web frameworkを使ったsample集
+samples of using bottle web framework at python
