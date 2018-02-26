@@ -59,35 +59,33 @@ function snapshot() {
     document.querySelector('img').src = canvasElement.toDataURL('image/webp');
 }
 
-$( function(imageType) {
-    $( 'button#saveCanvas' ) .click(
-    function(imageType) {
+jQuery(()=>{
+	$( 'button#saveCanvas' ) .click(
+	    () => {
 
-		var imageType = "image/jpeg";
-		var fileName = "sample.jpg";
+			const imageType = "image/jpeg";
 
-    	var canvas = document.getElementById("myCanvas");
-    // base64エンコードされたデータを取得 「data:image/png;base64,iVBORw0k～」
-    	var base64 = canvas.toDataURL(imageType);
-		console.log(base64);
+	    	const canvas = document.getElementById("myCanvas");
+	    // base64エンコードされたデータを取得 「data:image/png;base64,iVBORw0k～」
+	    	base64 = canvas.toDataURL(imageType);
+			console.log(base64);
 
-//const posttext = (text) => {
-		let message = { "picture" : base64 };
-		console.log(message);
+			let message = { "picture" : base64 };
+			console.log(message);
 
-		$.ajax({
-			type : "POST",
-			url:RESTURIROOT+'/picpost',
-			contentType: 'application/json; charset=UTF-8',
-			dataType: 'json',
-			data: JSON.stringify(message),
-			success: () => {
-				console.log("success");
-			},
-			error: ()=>{
-				console.log("error");
-			}
+			$.ajax({
+				type : "POST",
+				url:RESTURIROOT+'/picpost',
+				contentType: 'application/json; charset=UTF-8',
+				dataType: 'json',
+				data: JSON.stringify(message),
+				success: () => {
+					console.log("success");
+				},
+				error: ()=>{
+					console.log("error");
+				}
+			});
+			return;
 		});
-		return;
 	});
-});
