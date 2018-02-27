@@ -5,6 +5,7 @@ const currentmov = () => {
 		dataType: 'json',
 		success: (res) => {
 			//サーバから返答がもらえた
+			console.log(res);
 			document.querySelector('img').src = res.currentmov;
 		},
 		error: (req,err) => {
