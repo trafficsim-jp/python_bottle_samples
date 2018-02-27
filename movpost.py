@@ -9,18 +9,3 @@ from bottle import view, template, route, static_file
 @view('movpost')
 def entry():
 	return dict(message="hello,bottle")
-
-@post('/api/picpost')
-def entry():
-	outputfile = os.getcwd()+'/picpost.jpeg'
-	empty = {}
-	picture = request.json["picture"]
-	bodies = picture.split(",")
-	body = bodies[-1]
-	decbody = base64.b64decode(body)
-	outputf = open(outputfile,'w')
-	outputf.write(decbody)
-	outputf.close()
-	response.status = 200
-	response.set_header("Content-Type", "application/json;charset=UTF-8")
-	return json.dumps({})
