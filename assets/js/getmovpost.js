@@ -6,7 +6,9 @@ const currentmov = () => {
 		success: (res) => {
 			//サーバから返答がもらえた
 			console.log(res);
-			document.querySelector('img').src = res.currentmov;
+			let bodies = res.currentmov
+			let body = window.atob(bodies)
+			document.querySelector('img').src = body;
 		},
 		error: (req,err) => {
 			//サーバから返答が何らかの形で失敗した.
