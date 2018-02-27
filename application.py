@@ -35,3 +35,5 @@ import picpost
 import static
 
 import movpost
+
+import getmovpost
