@@ -22,5 +22,5 @@ const currentmov = () => {
 };
 
 jQuery(()=>{
-	setInterval(currentmov(), 1000);
+	setInterval(currentmov, 1000);
 });
