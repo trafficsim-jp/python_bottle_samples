@@ -5,9 +5,7 @@ const currentmov = () => {
 		dataType: 'json',
 		success: (res) => {
 			//サーバから返答がもらえた
-			let bodies = res.currentmov
-			console.log(bodies);
-			let body = window.atob(bodies)
+			let body = res.currentmov
 			console.log(body);
 			document.querySelector('img').src = body;
 		},
