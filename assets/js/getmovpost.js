@@ -1,14 +1,13 @@
-// 今どきの関数定義
 const getfruits = () => {
 	$.ajax({
 		type: 'GET',
-		url:RESTURIROOT+'/fruits',
+		url:RESTURIROOT+'/getmovpost',
 		dataType: 'json',
 		success: (res) => {
 			//サーバから返答がもらえた
 			let fruitsbox = $("p#fruitsbox");
 			console.log(res);
-			fruitsbox.text("get fruits: <"+res.fruits+">");
+			$("p#fruitsbox").text("get fruits: <"+res.fruits+">");
 		},
 		error: (req,err) => {
 			//サーバから返答が何らかの形で失敗した.
@@ -19,12 +18,3 @@ const getfruits = () => {
 	});
     return;
 };
-
-jQuery(()=>{
-	console.log("test");
-	console.log(RESTURIROOT);
-	$("button#reget").click(()=>{
-		getfruits();
-	});
-	getfruits();
-});
