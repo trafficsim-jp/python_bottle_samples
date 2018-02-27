@@ -10,9 +10,9 @@ from bottle import view, template, route, static_file
 def entry():
 	return dict(message="hello,bottle")
 
-@post('/api/picpost')
+@post('/api/movpost')
 def entry():
-	outputfile = os.getcwd()+'/picpost.jpeg'
+	outputfile = os.getcwd()+'/movpost.jpeg'
 	empty = {}
 	picture = request.json["picture"]
 	bodies = picture.split(",")
