@@ -1,4 +1,7 @@
 const currentmov = () => {
+	let videoElement = document.querySelector('video');
+    let canvasElement = document.querySelector('canvas');
+    let context = canvasElement.getContext('2d');
 	$.ajax({
 		type: 'GET',
 		url:RESTURIROOT+'/getmovpost',
