@@ -1,13 +1,11 @@
-const getfruits = () => {
+const currentmov = () => {
 	$.ajax({
 		type: 'GET',
 		url:RESTURIROOT+'/getmovpost',
 		dataType: 'json',
 		success: (res) => {
 			//サーバから返答がもらえた
-			let fruitsbox = $("p#fruitsbox");
-			console.log(res);
-			$("p#fruitsbox").text("get fruits: <"+res.fruits+">");
+			document.querySelector('img').src = res.currentmov;
 		},
 		error: (req,err) => {
 			//サーバから返答が何らかの形で失敗した.
@@ -18,3 +16,7 @@ const getfruits = () => {
 	});
     return;
 };
+
+jQuery(()=>{
+	setInterval(currentmov(), 1000);
+});
