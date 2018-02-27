@@ -1,7 +1,7 @@
 <%
 from bottle import request
 import assets
-javascript_assets=assets.assets('js','fruits.js')
+javascript_assets=assets.assets('js','getmovpost.js')
 url=request.urlparts.scheme+'://'+request.urlparts.netloc+'/api'
 %>
 <html>
