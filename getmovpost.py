@@ -18,6 +18,6 @@ def entry():
 	outpost = outposts.read()
 	encbody = base64.b64encode(outpost)
 	response.set_header("Content-Type", "application/json;charset=UTF-8")
-	respmsg = { "currentmov" : encbody }
+	respmsg = { "currentmov" : "data:image/jpeg;base64,"+encbody }
 
-	return json.dumps(respmsg, ensure_ascii=False)
+	return json.dumps(respmsg)
