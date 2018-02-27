@@ -63,7 +63,7 @@ $(function() {
 
 	// スタート
     $("button#startflvideo").click(function(){
-        timerName = setInterval(pars2images, speed);
+        timerName = setInterval(startflvideo, speed);
     })
 
     // ストップ
