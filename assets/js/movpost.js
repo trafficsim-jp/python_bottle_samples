@@ -65,7 +65,7 @@ $(function() {
 
 		$.ajax({
 			type : "POST",
-			url:RESTURIROOT+'/picpost',
+			url:RESTURIROOT+'/movpost',
 			contentType: 'application/json; charset=UTF-8',
 			dataType: 'json',
 			data: JSON.stringify(message),
@@ -78,14 +78,11 @@ $(function() {
 		});
 		return;
 	}
-});
 
-	// スタート
     $("button#startflvideo").click(function(){
         timerName = setInterval(startflvideo, speed);
     })
 
-    // ストップ
     $("button#stopflvideo").click(function(){
         if (timerName) {
             clearInterval(timerName);
