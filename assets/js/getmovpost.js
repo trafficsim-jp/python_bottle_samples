@@ -9,6 +9,7 @@ const currentmov = () => {
 			console.log(bodies);
 			let body = window.atob(bodies)
 			console.log(body);
+			context.drawImage(videoElement, 0, 0, videoElement.width, videoElement.height);
 			document.querySelector('img').src = body;
 		},
 		error: (req,err) => {
