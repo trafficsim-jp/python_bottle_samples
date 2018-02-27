@@ -60,7 +60,7 @@ function snapshot() {
 }
 
 jQuery(()=>{
-	$( 'button#saveCanvas' ) .click(
+	$('button#saveCanvas').click(
 	    () => {
 
 			const imageType = "image/jpeg";

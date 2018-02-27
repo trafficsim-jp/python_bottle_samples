@@ -48,7 +48,33 @@ function stopVideo() {
     }
 }
 
-function snapshot() {
+$(function() {
+    let videoElement = document.querySelector('video');
+    let canvasElement = document.querySelector('canvas');
+    let context = canvasElement.getContext('2d');
+	let speed = 1000;
+	let start = 0;
+	let timerName;
+
+	function startflvideo(){
+		context.drawImage(videoElement, 0, 0, videoElement.width, videoElement.height);
+	    document.querySelector('img').src = canvasElement.toDataURL('image/webp');
+	}
+
+	// スタート
+    $("button#startflvideo").click(function(){
+        timerName = setInterval(pars2images, speed);
+    })
+
+    // ストップ
+    $("button#stopflvideo").click(function(){
+        if (timerName) {
+            clearInterval(timerName);
+        }
+    });
+});
+
+/*function snapshot() {
     console.info('スナップショットをとるよ！');
 
     var videoElement = document.querySelector('video');
@@ -89,3 +115,4 @@ jQuery(()=>{
 			return;
 		});
 	});
+*/
