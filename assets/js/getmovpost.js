@@ -1,7 +1,4 @@
 const currentmov = () => {
-	let videoElement = document.querySelector('video');
-    let canvasElement = document.querySelector('canvas');
-    let context = canvasElement.getContext('2d');
 	$.ajax({
 		type: 'GET',
 		url:RESTURIROOT+'/getmovpost',
@@ -12,7 +9,6 @@ const currentmov = () => {
 			console.log(bodies);
 			let body = window.atob(bodies)
 			console.log(body);
-			context.drawImage(videoElement, 0, 0, videoElement.width, videoElement.height);
 			document.querySelector('img').src = body;
 		},
 		error: (req,err) => {
