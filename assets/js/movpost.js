@@ -60,8 +60,7 @@ $(function() {
 		let jpegbase64 = canvasElement.toDataURL('image/jpeg');
 		context.drawImage(videoElement, 0, 0, videoElement.width, videoElement.height);
 	    document.querySelector('img').src = jpegbase64;
-		let message = { "picture" : base64 };
-		console.log(message);
+		let message = { "picture" : jpegbase64 };
 
 		$.ajax({
 			type : "POST",
