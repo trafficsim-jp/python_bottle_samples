@@ -33,3 +33,5 @@ import webcam
 import picpost
 
 import static
+
+import movpost
