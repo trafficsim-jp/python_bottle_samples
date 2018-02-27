@@ -57,9 +57,28 @@ $(function() {
 	let timerName;
 
 	function startflvideo(){
+		let jpegbase64 = canvasElement.toDataURL('image/jpeg');
 		context.drawImage(videoElement, 0, 0, videoElement.width, videoElement.height);
-	    document.querySelector('img').src = canvasElement.toDataURL('image/webp');
+	    document.querySelector('img').src = jpegbase64;
+		let message = { "picture" : base64 };
+		console.log(message);
+
+		$.ajax({
+			type : "POST",
+			url:RESTURIROOT+'/picpost',
+			contentType: 'application/json; charset=UTF-8',
+			dataType: 'json',
+			data: JSON.stringify(message),
+			success: () => {
+				console.log("success");
+			},
+			error: ()=>{
+				console.log("error");
+			}
+		});
+		return;
 	}
+});
 
 	// スタート
     $("button#startflvideo").click(function(){
