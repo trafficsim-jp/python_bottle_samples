@@ -15,7 +15,7 @@ url=request.urlparts.scheme+'://'+request.urlparts.netloc+'/api'
         </script>
     </head>
     <body>
-        <p id="flmov">自動再生</h2>
+        <p id="flmov">自動再生</p>
 		<img/>
     </body>
 </html>
