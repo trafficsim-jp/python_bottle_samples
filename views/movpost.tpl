@@ -25,7 +25,7 @@ url=request.urlparts.scheme+'://'+request.urlparts.netloc+'/api'
 <h2>動画</h2>
 <video autoplay width="320" height="240"></video>
 
-<h2>スナップショット</h2>
+<h2>コマ送り</h2>
 <img/>
 
 
