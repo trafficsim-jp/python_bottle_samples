@@ -37,3 +37,9 @@ import static
 import movpost
 
 import getmovpost
+
+import webspeech
+
+import record
+
+import postwav
