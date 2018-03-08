@@ -30,6 +30,5 @@ url=request.urlparts.scheme+'://'+request.urlparts.netloc+'/api'
 
 
 <canvas style="display: none" width="320" height="240" id="myCanvas"></canvas>
-<!-- <script src="../assets/js/picpost.js"></script> -->
 </body>
 </html>
