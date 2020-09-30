@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import argparse
 
 import smtplib
@@ -20,14 +21,20 @@ def create_message(from_addr, to_addrs, subject, body):
 	return msg
 
 def sendmail(username, password, from_addr, to_addrs, msg):
-	smptobj = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
-	smptobj.ehlo()
-	smptobj.starttls()
-	smptobj.ehlo()
-	smptobj.login(username, password)
-	smptobj.sendmail(from_addr, to_addrs, msg.as_string())
-	smptobj.close
-
+	smtpobj = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
+	try:
+		smtpobj.ehlo()
+		smtpobj.starttls()
+		smtpobj.ehlo()
+		smtpobj.login(username, password)
+		smtpobj.sendmail(from_addr, to_addrs, msg.as_string())
+	except smtplib.SMTPException as e:
+		# 送信に失敗した理由が例外で飛んでくる
+		print(e)
+	finally:
+		# SMTP QUITの結果が却って来るが無視して良い
+		result = smtpobj.quit()
+		print(result)
 
 if __name__ == '__main__':
 
@@ -42,5 +49,6 @@ if __name__ == '__main__':
 	to_addrs = args.destinations
 
 	msg = create_message(FROM_ADDRESS, args.destinations, SUBJECT, MAIL_MESSAGE)
+	# to_addrsに渡すときはsplitで分割して文字列の配列にする.
 	sendmail(args.user, args.password, FROM_ADDRESS, args.destinations.split(','), msg)
 
