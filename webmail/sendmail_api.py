@@ -2,11 +2,26 @@
 import os,json
 
 from bottle import Bottle
-from bottle import get, post, response
+from bottle import get, post, request, response
 
 import http_settings
 
-CONFIG_JSON_PATH=os.getcwd()+'/conf/sendmail_conf.json'
+CONFIG_JSON_PATH=os.getcwd()+'/sendmail_conf.json'
+
+def load_config_file():
+	conf_obj = {}
+	# 例外の処理はときに行わない.
+	try:
+		with open(CONFIG_JSON_PATH, mode='r') as f:
+			conf_obj = json.load(f)
+	except IOError as e:
+		pass
+	except JSONDecodeError as e:
+		pass
+	finally:
+		pass
+
+	return conf_obj
 
 app = Bottle()
 app.add_hook('after_request', http_settings.enable_cors)
@@ -17,8 +32,10 @@ def entry():
 	try:
 		print(CONFIG_JSON_PATH)
 		with open(CONFIG_JSON_PATH, mode='r') as f:
-			conf_json = json_load(f)
+			conf_json = json.load(f)
 			print(conf_json)
+			smtp_server=conf_json['smtp_server']
+
 	except IOError as e:
 		if (e.errno == 2):
 			# まだ設定されていない.
@@ -30,10 +47,37 @@ def entry():
 			response.status = 500
 			response.content_type = 'application/json'
 			return json.dumps({'error' : e.message})
+	except KeyError:
+		response.status = 500
+		response.content_type = 'application/json'
+		return json.dumps({'error' : e.message})
 	finally:
 		pass
 
 	return json.dumps({"smtp_server": smtp_server})
+
+@app.post('/smtp_server')
+def entry():
+	print(request.json)
+
+	try:
+		print(request.json['smtp_server'])
+		conf_obj = load_config_file();
+		conf_obj['smtp_server'] = request.json['smtp_server']
+		with open(CONFIG_JSON_PATH, mode='w') as f:
+			json.dump(conf_obj,f)
+
+	except IOError as e:
+		response.status = 500
+		response.content_type = 'application/json'
+		return json.dumps({'error' : e.message})
+
+	except KeyError:
+		response.status = 400
+		response.content_type = 'application/json'
+		return json.dumps({'error' : 'invalid format'})
+
+	return json.dumps({"result": "success"})
 
 @app.get('/smtp_server_port')
 def entry():
@@ -41,7 +85,7 @@ def entry():
 	try:
 		print(CONFIG_JSON_PATH)
 		with open(CONFIG_JSON_PATH, mode='r') as f:
-			conf_json = json_load(f)
+			conf_json = json.load(f)
 			print(conf_json)
 	except IOError as e:
 		if (e.errno == 2):
@@ -66,7 +110,7 @@ def entry():
 	try:
 		print(CONFIG_JSON_PATH)
 		with open(CONFIG_JSON_PATH, mode='r') as f:
-			conf_json = json_load(f)
+			conf_json = json.load(f)
 			print(conf_json)
 
 	except IOError as e:
@@ -93,7 +137,7 @@ def entry():
 	try:
 		print(CONFIG_JSON_PATH)
 		with open(CONFIG_JSON_PATH, mode='r') as f:
-			conf_json = json_load(f)
+			conf_json = json.load(f)
 			print(conf_json)
 
 	except IOError as e:
@@ -118,7 +162,7 @@ def entry():
 	try:
 		print(CONFIG_JSON_PATH)
 		with open(CONFIG_JSON_PATH, mode='r') as f:
-			conf_json = json_load(f)
+			conf_json = json.load(f)
 			print(conf_json)
 
 	except IOError as e:
@@ -139,11 +183,11 @@ def entry():
 
 @app.get('/dest_addresses')
 def entry():
-	dest_address=""
+	dest_addresses=""
 	try:
 		print(CONFIG_JSON_PATH)
 		with open(CONFIG_JSON_PATH, mode='r') as f:
-			conf_json = json_load(f)
+			conf_json = json.load(f)
 			print(conf_json)
 
 	except IOError as e:
