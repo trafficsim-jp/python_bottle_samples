@@ -41,22 +41,46 @@ function submit_server_setting(){
 		.then(
 			() => {
 				console.log("check smpt_port");
-				let smpt_server_port = Number($("input#smtp_port").val());
-				if (typeof smpt_server_port === "undefined") {
+				let smtp_server_port = Number($("input#smtp_port").val());
+				if (typeof smtp_server_port === "undefined") {
 					throw new Error('invalid smtp server port');
 				}
-				if (smpt_server_port == 0){
+				if (smtp_server_port == 0){
 					throw new Error('invalid smtp server port');
 				}
-				return smpt_server_port;
+				return smtp_server_port;
 			},
 			()=>{
 				//前回のthenで失敗したときにここに来ます.
 				throw new Error('failed to post smtp server address');
 			})
-		.then((smpt_server_port)=>{
-			
+		.then((smtp_server_port)=>{
+			var d = new $.Deferred();
+			$.ajax({
+				type: 'POST',
+				contentType: "application/json",
+				dataType: "json",
+				url: RESTURIROOT+'/sendmail/smtp_server_port',
+				data: JSON.stringify({smtp_server_port : smtp_server_port}),
+				success:(res) => {
+					d.resolve();
+				},
+				error: (req,status,err) => {
+					d.reject();
+				},
+				complete: () => {
+				}
+			});
+			return d.promise();
 		})
+		.then(
+			() => {
+			},
+			() => {
+				//前回のthenで失敗したときにここに来ます.
+				throw new Error('failed to post smtp server port');
+			}
+		)
 		.catch((e) => {
 			console.log(e);
 			alert(e);
@@ -97,6 +121,13 @@ function init_page(){
 		url:RESTURIROOT+'/sendmail/smtp_server_port',
 		dataType: 'json',
 		success:(res) => {
+			console.log("get smtp_server_port");
+			console.log(res);
+			if(res.smtp_server_port == 0){
+				// 設定されていない
+				// default値を入れておく
+				$("input#smtp_port").val(587);
+			}
 		},
 		error: (req,status,err)=> {
 			if(req.status == 404){

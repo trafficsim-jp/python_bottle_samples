@@ -61,7 +61,6 @@ def entry():
 	print(request.json)
 
 	try:
-		print(request.json['smtp_server'])
 		conf_obj = load_config_file();
 		conf_obj['smtp_server'] = request.json['smtp_server']
 		with open(CONFIG_JSON_PATH, mode='w') as f:
@@ -83,10 +82,10 @@ def entry():
 def entry():
 	port=0
 	try:
-		print(CONFIG_JSON_PATH)
 		with open(CONFIG_JSON_PATH, mode='r') as f:
 			conf_json = json.load(f)
-			print(conf_json)
+			port = conf_json['smtp_server_port']
+
 	except IOError as e:
 		if (e.errno == 2):
 			# まだ設定されていない.
@@ -98,10 +97,39 @@ def entry():
 			response.status = 500
 			response.content_type = 'application/json'
 			return json.dumps({'error' : e.message})
+
+	except KeyError:
+		# 設定がされていない
+		response.status = 404
+		response.content_type = 'application/json'
+		return json.dumps({'error' : 'not found'})
+
 	finally:
 		pass
 
 	return json.dumps({"smtp_server_port": port})
+
+@app.post('/smtp_server_port')
+def entry():
+	print "POST STMP PORT"
+
+	try:
+		conf_obj = load_config_file();
+		conf_obj['smtp_server_port'] = request.json['smtp_server_port']
+		with open(CONFIG_JSON_PATH, mode='w') as f:
+			json.dump(conf_obj,f)
+
+	except IOError as e:
+		response.status = 500
+		response.content_type = 'application/json'
+		return json.dumps({'error' : e.message})
+
+	except KeyError:
+		response.status = 400
+		response.content_type = 'application/json'
+		return json.dumps({'error' : 'invalid format'})
+
+	return json.dumps({"result": "success"})
 
 @app.get('/username')
 def entry():
