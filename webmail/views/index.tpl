@@ -4,20 +4,11 @@
     <meta charset="utf-8">
     <title>index</title>
     <style type="text/css">
-     <!--
      #nav {
          float: left;
          width: 120px;
          /* サイドバーの幅 */
      }
-
-     #content {
-         margin-left: 130px;
-         /* メインカラムの左マージン（サイドバーの幅以上） */
-         margin-top: 10px;
-
-     }
-     -->
     </style>
   </head>
   <body>
@@ -25,10 +16,11 @@
       <ul class="nl" >
         <li><a href="sendmail.html" target="content">メール送信</a></li>
         <li><a href="setting.html" target="content">SMTP設定</a></li>
+        <li><a href="log.html" target="content">送信ログ</a>
       </ul>
     </div>
     <div id="content">
-      <iframe frameborder="0" marginwidth="10" name="content" src="sendmail.html"/>
+      <iframe frameborder="0" marginwidth="10" width="80%" height="300" name="content" src="sendmail.html"/>
     </div>
   </body>
 </html>
