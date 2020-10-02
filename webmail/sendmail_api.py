@@ -58,8 +58,6 @@ def entry():
 
 @app.post('/smtp_server')
 def entry():
-	print(request.json)
-
 	try:
 		conf_obj = load_config_file();
 		conf_obj['smtp_server'] = request.json['smtp_server']
@@ -139,7 +137,7 @@ def entry():
 		print(CONFIG_JSON_PATH)
 		with open(CONFIG_JSON_PATH, mode='r') as f:
 			conf_json = json.load(f)
-			print(conf_json)
+			username = conf_json['username']
 
 	except IOError as e:
 		if (e.errno == 2):
@@ -157,6 +155,26 @@ def entry():
 
 	return json.dumps({"username" : username})
 
+@app.post('/username')
+def entry():
+	print(request.json)
+	try:
+		conf_obj = load_config_file();
+		conf_obj['username'] = request.json['username']
+		with open(CONFIG_JSON_PATH, mode='w') as f:
+			json.dump(conf_obj,f)
+
+	except IOError as e:
+		response.status = 500
+		response.content_type = 'application/json'
+		return json.dumps({'error' : e.message})
+
+	except KeyError:
+		response.status = 400
+		response.content_type = 'application/json'
+		return json.dumps({'error' : 'invalid format'})
+
+	return json.dumps({"result": "success"})
 
 @app.get('/password')
 def entry():

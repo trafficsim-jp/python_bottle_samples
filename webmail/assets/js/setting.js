@@ -31,7 +31,7 @@ function submit_server_setting(){
 					d.resolve();
 				},
 				error: (req,status,err) => {
-					d.reject();
+					d.reject(Error('failed to post smtp server address'));
 				},
 				complete: () => {
 				}
@@ -50,9 +50,9 @@ function submit_server_setting(){
 				}
 				return smtp_server_port;
 			},
-			()=>{
+			(e)=>{
 				//前回のthenで失敗したときにここに来ます.
-				throw new Error('failed to post smtp server address');
+				throw e;
 			})
 		.then((smtp_server_port)=>{
 			var d = new $.Deferred();
@@ -66,7 +66,7 @@ function submit_server_setting(){
 					d.resolve();
 				},
 				error: (req,status,err) => {
-					d.reject();
+					d.reject(Error('failed to post smtp server port'));
 				},
 				complete: () => {
 				}
@@ -75,10 +75,43 @@ function submit_server_setting(){
 		})
 		.then(
 			() => {
+				let username = $("input#inputusername").val();
+				if (username == ""){
+					throw new Error('invalid username');
+				}
+				return username;
 			},
-			() => {
+			(e) => {
 				//前回のthenで失敗したときにここに来ます.
-				throw new Error('failed to post smtp server port');
+				throw e;
+			}
+		)
+		.then(
+			(username) => {
+				console.log("POST username:"+username);
+				var d = new $.Deferred();
+				$.ajax({
+					type: 'POST',
+					contentType: 'application/json',
+					dataType: 'json',
+					url: RESTURIROOT+'/sendmail/username',
+					data: JSON.stringify({ username : username }),
+					success:(res) => {
+						d.resolve();
+					},
+					error: (req, status, err) => {
+						d.reject(Error('failed to post username'));
+					},
+					complete: () => {
+					}
+				});
+				return d.promise();
+			})
+		.then(
+			() => {
+			},
+			(e)=>{
+				throw e;
 			}
 		)
 		.catch((e) => {
@@ -128,6 +161,9 @@ function init_page(){
 				// default値を入れておく
 				$("input#smtp_port").val(587);
 			}
+			else {
+				$("input#smtp_port").val(res.smtp_server_port);
+			}
 		},
 		error: (req,status,err)=> {
 			if(req.status == 404){
@@ -147,10 +183,9 @@ function init_page(){
 		dataType: 'json',
 		success:(res)=> {
 			let username_input = $("input#inputusername");
-			if (res.username == "") {
+			if (res.username != "") {
 				username_input.val(res.username);
 			}
-			console.log(res);
 		},
 		error: (req,status,err) => {
 			if(req.status == 404){
