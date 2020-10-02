@@ -175,7 +175,7 @@ function submit_address_setting(){
 					contentType: 'application/json',
 					dataType: 'json',
 					url: RESTURIROOT+'/sendmail/from_address',
-					data: JSON.stringify({from_address,from_address}),
+					data: JSON.stringify({from_address:from_address}),
 					success:(res) => {
 						d.resolve();
 					},

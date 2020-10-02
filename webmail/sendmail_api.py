@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
-import os,json
+import os,datetime,json
 
 from bottle import Bottle
 from bottle import get, post, request, response
 
 import http_settings
+import smtplib_wrapper
 
 CONFIG_JSON_PATH=os.getcwd()+'/sendmail_conf.json'
+LOG_FILE_PATH=os.getcwd()+'/sendmail.log'
 
 def load_config_file():
 	conf_obj = {}
@@ -22,6 +24,11 @@ def load_config_file():
 		pass
 
 	return conf_obj
+
+def output_log(message):
+	output_message=str(datetime.datetime.now())+","+message
+	with open(LOG_FILE_PATH, mode='a') as f:
+		f.write(output_message+'\n')
 
 app = Bottle()
 app.add_hook('after_request', http_settings.enable_cors)
@@ -324,5 +331,38 @@ def entry():
 		response.status = 400
 		response.content_type = 'application/json'
 		return json.dumps({'error' : 'invalid format'})
+
+	return json.dumps({"result": "success"})
+
+@app.post('/sendmessage')
+def entry():
+	print "POST sendmessge"
+	try:
+		conf_obj = load_config_file();
+		msg = smtplib_wrapper.create_message(conf_obj['from_address'],
+											 conf_obj['dest_addresses'],
+											 request.json['subject'],
+											 request.json['message']);
+
+		result = smtplib_wrapper.sendmail(conf_obj['smtp_server'],
+										  conf_obj['smtp_server_port'],
+										  conf_obj['username'],
+										  conf_obj['password'],
+										  conf_obj['from_address'],
+										  conf_obj['dest_addresses'].split(','),
+										  msg)
+		if result != "success":
+			output_log(result)
+			response.status = 500
+			response.content_type = 'application/json'
+			return json.dumps({'error' : result.split(':')[1]})
+
+	except KeyError:
+		response.status = 409
+		response.content_type = 'application/json'
+		output_log("error: invalid condition")
+		return json.dumps({'error' : 'invalid condition'})
+
+	output_log("success: to "+conf_obj['dest_addresses'])
 
 	return json.dumps({"result": "success"})
