@@ -1,6 +1,5 @@
 
 function submit_server_setting(){
-	console.log("submit_server_setting");
 
 	let submit_promise =
 		new Promise((resolve) => {
@@ -10,7 +9,6 @@ function submit_server_setting(){
 
 	submit_promise
 		.then(() => {
-			console.log("check smpt_server");
 			let smtp_server = $("input#smtp_server").val();
 			if(smtp_server == "") {
 				throw new Error('invalid smpt server address');
@@ -88,7 +86,6 @@ function submit_server_setting(){
 		)
 		.then(
 			(username) => {
-				console.log("POST username:"+username);
 				var d = new $.Deferred();
 				$.ajax({
 					type: 'POST',
@@ -109,8 +106,36 @@ function submit_server_setting(){
 			})
 		.then(
 			() => {
+				return $("input#password").val();
 			},
 			(e)=>{
+				throw e;
+			}
+		)
+		.then(
+			(password) => {
+				var d = new $.Deferred();
+				$.ajax({
+					type: 'POST',
+					contentType: 'application/json',
+					dataType: 'json',
+					url: RESTURIROOT+'/sendmail/password',
+					data: JSON.stringify({ password : password }),
+					success:(res) => {
+						d.resolve();
+					},
+					error: (req,status,err) => {
+						d.reject(Error('failed to post password'));
+					},
+					complete: () => {
+					}
+				});
+				return d.promise();
+			})
+		.then(
+			() => {
+			},
+			(e) => {
 				throw e;
 			}
 		)
@@ -127,7 +152,89 @@ function submit_server_setting(){
 }
 
 function submit_address_setting(){
-	console.log("submit_address_setting");
+	let submit_promise =
+		new Promise((resolve) => {
+			// kickだけおこなう.
+			resolve();
+		});
+
+	submit_promise
+		.then(
+			() => {
+				let from_address = $("input#from_address").val();
+				if (from_address === "") {
+					throw new Error('invalid from_address');
+				}
+				return from_address;
+			})
+		.then(
+			(from_address) => {
+				var d = new $.Deferred();
+				$.ajax({
+					type: 'POST',
+					contentType: 'application/json',
+					dataType: 'json',
+					url: RESTURIROOT+'/sendmail/from_address',
+					data: JSON.stringify({from_address,from_address}),
+					success:(res) => {
+						d.resolve();
+					},
+					error: (req,status,err) => {
+						d.reject(Error('failed to post from address'));
+					},
+					complete: () => {
+					}
+				});
+				return d.promise();
+			})
+		.then(
+			()=>{
+				let dest_addresses = $("input#dest_addresses").val();
+				if (dest_addresses === ""){
+					throw new Error('invalid dest_addresses');
+				}
+				return dest_addresses;
+			},
+			(e) => {
+				throw e;
+			}
+		)
+		.then(
+			(dest_addresses) => {
+				var d = new $.Deferred();
+				$.ajax({
+					type: 'POST',
+					contentType: 'application/json',
+					dataType: 'json',
+					url: RESTURIROOT+'/sendmail/dest_addresses',
+					data: JSON.stringify({dest_addresses,dest_addresses}),
+					success:(res) => {
+						d.resolve();
+					},
+					error: (req,status,err) => {
+						d.reject(Error('failed to post dest addresses'));
+					},
+					complete: () => {
+					}
+				});
+				return d.promise();
+			})
+		.then(
+			() => {
+			},
+			(e) => {
+				throw e;
+			})
+		.catch((e) => {
+			console.log(e);
+			alert(e);
+		})
+		.finally(() => {
+			//失敗成功に関わらず必ず呼び出されます.
+			console.log("finally");
+			//設定項目の更新
+			init_page();
+		});
 }
 
 function init_page(){
@@ -203,6 +310,7 @@ function init_page(){
 		url: RESTURIROOT+'/sendmail/password',
 		dataType: 'json',
 		success:(res) => {
+			$("input#password").val(res.password);
 		},
 		error: (req,status,err) => {
 			if(req.status == 404){
@@ -220,6 +328,7 @@ function init_page(){
 		url: RESTURIROOT+'/sendmail/from_address',
 		dataType: 'json',
 		success:(res) => {
+			$("input#from_address").val(res.from_address);
 		},
 		error: (req,status,err) => {
 			if(req.status == 404){
@@ -237,6 +346,7 @@ function init_page(){
 		url: RESTURIROOT+'/sendmail/dest_addresses',
 		dataType: 'json',
 		success:(res) => {
+			$("input#dest_addresses").val(res.dest_addresses);
 		},
 		error: (req,status,err) => {
 			if(req.status == 404){

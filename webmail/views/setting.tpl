@@ -27,7 +27,7 @@ url=request.urlparts.scheme+'://'+request.urlparts.netloc+'/api'
       user name(acount name of smtp server):<br>
       <input id="inputusername" type="text" placeholder="no setting"><br>
       password:<br>
-      <input id=password" type="password" placeholder="no setting"><br>
+      <input id="password" type="password" placeholder="no setting"><br>
       <br><button id="server_setting">submit</button>
     </fieldset>
     <fieldset>

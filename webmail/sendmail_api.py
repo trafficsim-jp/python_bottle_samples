@@ -157,7 +157,7 @@ def entry():
 
 @app.post('/username')
 def entry():
-	print(request.json)
+
 	try:
 		conf_obj = load_config_file();
 		conf_obj['username'] = request.json['username']
@@ -184,7 +184,10 @@ def entry():
 		print(CONFIG_JSON_PATH)
 		with open(CONFIG_JSON_PATH, mode='r') as f:
 			conf_json = json.load(f)
-			print(conf_json)
+			password=conf_json['password']
+
+	except KeyError:
+		pass
 
 	except IOError as e:
 		if (e.errno == 2):
@@ -197,19 +200,46 @@ def entry():
 			response.status = 500
 			response.content_type = 'application/json'
 			return json.dumps({'error' : e.message})
+
 	finally:
 		pass
 
 	return json.dumps({"password": password})
 
+@app.post('/password')
+def entry():
+
+	try:
+		conf_obj = load_config_file();
+		conf_obj['password'] = request.json['password']
+		with open(CONFIG_JSON_PATH, mode='w') as f:
+			json.dump(conf_obj,f)
+
+	except IOError as e:
+		response.status = 500
+		response.content_type = 'application/json'
+		return json.dumps({'error' : e.message})
+
+	except KeyError:
+		response.status = 400
+		response.content_type = 'application/json'
+		return json.dumps({'error' : 'invalid format'})
+
+	return json.dumps({"result": "success"})
+
 @app.get('/from_address')
 def entry():
+
 	from_address=""
+
 	try:
 		print(CONFIG_JSON_PATH)
 		with open(CONFIG_JSON_PATH, mode='r') as f:
 			conf_json = json.load(f)
-			print(conf_json)
+			from_address = conf_json['from_address']
+
+	except KeyError:
+		pass
 
 	except IOError as e:
 		if (e.errno == 2):
@@ -227,14 +257,38 @@ def entry():
 
 	return json.dumps({"from_address": from_address})
 
+@app.post('/from_address')
+def entry():
+	try:
+		conf_obj = load_config_file();
+		conf_obj['from_address'] = request.json['from_address']
+		with open(CONFIG_JSON_PATH, mode='w') as f:
+			json.dump(conf_obj,f)
+
+	except IOError as e:
+		response.status = 500
+		response.content_type = 'application/json'
+		return json.dumps({'error' : e.message})
+
+	except KeyError:
+		response.status = 400
+		response.content_type = 'application/json'
+		return json.dumps({'error' : 'invalid format'})
+
+	return json.dumps({"result": "success"})
+
 @app.get('/dest_addresses')
 def entry():
 	dest_addresses=""
+
 	try:
 		print(CONFIG_JSON_PATH)
 		with open(CONFIG_JSON_PATH, mode='r') as f:
 			conf_json = json.load(f)
-			print(conf_json)
+			dest_addresses = conf_json['dest_addresses']
+
+	except KeyError:
+		pass
 
 	except IOError as e:
 		if (e.errno == 2):
@@ -247,7 +301,28 @@ def entry():
 			response.status = 500
 			response.content_type = 'application/json'
 			return json.dumps({'error' : e.message})
+
 	finally:
 		pass
 
 	return json.dumps({"dest_addresses": dest_addresses})
+
+@app.post('/dest_addresses')
+def entry():
+	try:
+		conf_obj = load_config_file();
+		conf_obj['dest_addresses'] = request.json['dest_addresses']
+		with open(CONFIG_JSON_PATH, mode='w') as f:
+			json.dump(conf_obj,f)
+
+	except IOError as e:
+		response.status = 500
+		response.content_type = 'application/json'
+		return json.dumps({'error' : e.message})
+
+	except KeyError:
+		response.status = 400
+		response.content_type = 'application/json'
+		return json.dumps({'error' : 'invalid format'})
+
+	return json.dumps({"result": "success"})
