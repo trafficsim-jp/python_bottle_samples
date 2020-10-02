@@ -27,6 +27,7 @@ def load_config_file():
 
 def output_log(message):
 	output_message=str(datetime.datetime.now())+","+message
+	print "<"+output_message+">"
 	with open(LOG_FILE_PATH, mode='a') as f:
 		f.write(output_message+'\n')
 
@@ -366,3 +367,19 @@ def entry():
 	output_log("success: to "+conf_obj['dest_addresses'])
 
 	return json.dumps({"result": "success"})
+
+@app.get('/log')
+def entry():
+
+	try:
+		with open(LOG_FILE_PATH,mode="r") as f:
+			log = f.read()
+			return json.dumps({"log": log})
+
+	except IOError as (err,msg):
+		if err == 2:
+			return json.dumps({"log": ""})
+		else:
+			response.status = 500
+			response.content_type = 'application/json'
+			return json.dumps({'error' : 'internal error'})
