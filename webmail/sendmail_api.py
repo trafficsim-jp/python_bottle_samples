@@ -27,7 +27,6 @@ def load_config_file():
 
 def output_log(message):
 	output_message=str(datetime.datetime.now())+","+message
-	print "<"+output_message+">"
 	with open(LOG_FILE_PATH, mode='a') as f:
 		f.write(output_message+'\n')
 
@@ -67,7 +66,7 @@ def entry():
 @app.post('/smtp_server')
 def entry():
 	try:
-		conf_obj = load_config_file();
+		conf_obj = load_config_file()
 		conf_obj['smtp_server'] = request.json['smtp_server']
 		with open(CONFIG_JSON_PATH, mode='w') as f:
 			json.dump(conf_obj,f)
@@ -117,7 +116,6 @@ def entry():
 
 @app.post('/smtp_server_port')
 def entry():
-	print "POST STMP PORT"
 
 	try:
 		conf_obj = load_config_file();
@@ -337,7 +335,7 @@ def entry():
 
 @app.post('/sendmessage')
 def entry():
-	print "POST sendmessge"
+	# メールメッセージの送信
 	try:
 		conf_obj = load_config_file();
 		msg = smtplib_wrapper.create_message(conf_obj['from_address'],
