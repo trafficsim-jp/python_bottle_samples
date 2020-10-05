@@ -41,7 +41,7 @@ def entry():
 	# LINE グループへの投稿
 	try:
 		conf_obj = load_config_file();
-		payload = {'message' : 'current notify test'}
+		payload = { 'message' : request.json['message'] }
 		payload = urllib.urlencode(payload).encode("utf-8")
 		req = urllib2.Request(LINE_NOTIFY_APIURI)
 		req.add_header('Content-Type', 'application/x-www-form-urlencoded')
